@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+    {% comment %} RELOAD DATA {% endcomment %}
+    <form action="{% url 'App' %}" method="POST">
+        {% csrf_token %}
+        <h1>UCL5 MieMie NLP & Data Mining Engine 
+            <button style="margin-left: 30px" class="btn btn-primary" type="submit" value='Click' name="updateModuleData">Reload Data</button>
+        </h1>     
+    </form>
+    
+    <br>
+    
+    {% comment %} SEARCH + CHECKBOXES {% endcomment %}
+    <form action="{% url 'App' %}" method="GET" value="{{ request.GET.q }}">
+        <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search posts"/>
+        <input type="submit" name="submit" value="Search"/>
+         <form method="post" action="#">
+             Modules {{ form.modBox }} <input type="checkbox", value="clicked", name="modBox" {{ form.modBox }}> 
+             Publications {{ form.pubBox }} <input type="checkbox", value="clicked", name="pubBox" {{ form.pubBox }}> 
+        </form><br>
+    </form>
+
+    <button style="" class="btn btn-primary" type="submit" value='Click' name="exportModules">
+        <a style="color:white" href="{% url 'export_modules_csv' %}">Export Modules to CSV</a>
+    </button>
+    <button style="" class="btn btn-primary" type="submit" value='Click' name="exportPublications">
+        <a style="color:white" href="{% url 'export_publications_csv' %}">Export Publications to CSV</a> 
+    </button>
+    
+    <br>
+    <br>  
+    <br>  
+
+    {% comment %} PUBLICATION DATA DISPLAY TABLE {% endcomment %}
+    {% if form.pubBox == 'checked' %}
+        <h3>Publications found: {{ len_pub }}</h3><br>
+        {% comment %} {% for item in pub %}
+            <p><b>Title:</b> {{ item.title }}</p>
+            <p><b>DOI:</b> {{ item.data.DOI }} <a href="{{ item.get_absolute_url }}">Details</a></p>
+            <hr>
+        {% endfor %} {% endcomment %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    {% comment %} <th scope="col">DOI</th> {% endcomment %}
+                    <th scope="col">Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in pub %}
+                    <tr>
+                        <td>{{ item.title  }}</td>
+                        {% comment %} <td>{{ item.data.DOI }}</td> {% endcomment %}
+                        <td><a href="{{ item.get_absolute_url }}">More</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% comment %} MODULE DATA DISPLAY TABLE {% endcomment %}
+    {% if form.modBox == 'checked' %}
+        <h3>Modules found: {{ len_mod }}</h3><br>
+        {% comment %} {% for item in mod %}
+            <p><b>Module ID:</b> {{ item.Module_ID }} <b>Module Name:</b> {{ item.Module_Name }} <a href="{{ item.get_absolute_url }}">Details</a></p>
+            <hr>
+        {% endfor %} {% endcomment %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Module Name</th>
+                    <th scope="col">Module ID</th>
+                    <th scope="col">Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in mod %}
+                    <tr>
+                        <td>{{ item.Module_Name  }}</td>
+                        <td>{{ item.Module_ID }}</td>
+                        <td><a href="{{ item.get_absolute_url }}">More</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
