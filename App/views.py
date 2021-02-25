@@ -12,7 +12,7 @@ import csv
 Module_CSV_Data = None
 Publication_CSV_Data = None
 global_context = {}
-
+UCL_AffiliationID = "60022148"
 
 def App(request):
     global Module_CSV_Data
@@ -23,8 +23,8 @@ def App(request):
     all_publications = Publication.objects.all()
 
     if request.method == "POST":
-        # updatePublicationsFromJSON(request)
-        # updateModuleData(request)
+        updatePublicationsFromJSON(request)
+        updateModuleData(request)
         return redirect('App')
 
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
@@ -249,7 +249,7 @@ def export_publications_csv(request):
     try:
         writer = csv.writer(response)
         writer.writerow(["Title", "EID", "DOI", "Year", "Source", "Volume", "Issue", "Page-Start", "Page-End", "Cited By",
-     "Link", "Abstract", "Author Keywords", "Index Keywords", "Dcoument Type", "Publication Stage", "Open Access", "Subject Areas", "Author Data"])
+                         "Link", "Abstract", "Author Keywords", "Index Keywords", "Dcoument Type", "Publication Stage", "Open Access", "Subject Areas", "UCL Authors Data", "Other Authors Data"])
     except:
         messages.success(request, ("No publications to export! Please try again."))
         return render(request, 'index.html', global_context)
@@ -271,13 +271,42 @@ def export_publications_csv(request):
         Link = all_contents['Link']
         Abstract = all_contents['Abstract']
         AuthorKeywords = all_contents['AuthorKeywords']
+        if AuthorKeywords:
+            AuthorKeywords = ','.join(AuthorKeywords)
         IndexKeywords = all_contents['IndexKeywords']
+        if IndexKeywords:
+            IndexKeywords = ','.join(IndexKeywords)
         DocumentType = all_contents['DocumentType']
         PublicationStage = all_contents['PublicationStage']
         OpenAccess = all_contents['OpenAccess']
         SubjectAreas = all_contents['SubjectAreas']
+        temp = []
+        if SubjectAreas:
+            for area in SubjectAreas:
+                temp.append(area[0])
+        SubjectAreas = ','.join(temp)
         AuthorData = all_contents['AuthorData']
+        UCLAuthorsData = []
+        OtherAuthorsData = []
+        if AuthorData:
+            for id_ in AuthorData:
+                name = AuthorData[id_]['Name']
+                affiliationID = AuthorData[id_]['AffiliationID']
+                affiliationName = AuthorData[id_]['AffiliationName']
+                if affiliationID  == UCL_AffiliationID:
+                    UCLAuthorsData.append(name + "(" + affiliationName + ")")
+                else:
+                    if name and not affiliationName:
+                        OtherAuthorsData.append(','.join([name, ""]))
+                    if not name and not affiliationName:
+                        OtherAuthorsData.append("")
+                    if name and affiliationName:
+                        OtherAuthorsData.append(name + "(" + affiliationName + ")")
+                    
+        UCLAuthorsData = ','.join(UCLAuthorsData)
+        OtherAuthorsData = ','.join(OtherAuthorsData)
 
-        writer.writerow([title, EID, DOI, Year, Source, Volume, Issue, PageStart, PageEnd, CitedBy, Link, Abstract, AuthorKeywords, IndexKeywords, DocumentType, PublicationStage, OpenAccess, SubjectAreas, AuthorData])
+        writer.writerow([title, EID, DOI, Year, Source, Volume, Issue, PageStart, PageEnd, CitedBy, Link, Abstract, AuthorKeywords,
+                         IndexKeywords, DocumentType, PublicationStage, OpenAccess, SubjectAreas, UCLAuthorsData, OtherAuthorsData])
 
     return response
