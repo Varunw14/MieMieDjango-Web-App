@@ -23,7 +23,7 @@ def App(request):
     all_publications = Publication.objects.all()
 
     if request.method == "POST":
-        updatePublicationsFromJSON(request)
+        # updatePublicationsFromJSON(request)
         updateModuleData(request)
         return redirect('App')
 
