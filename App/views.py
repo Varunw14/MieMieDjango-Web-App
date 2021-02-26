@@ -24,7 +24,7 @@ def App(request):
 
     if request.method == "POST":
         # updatePublicationsFromJSON(request)
-        updateModuleData(request)
+        # updateModuleData(request)
         return redirect('App')
 
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
