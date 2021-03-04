@@ -48,7 +48,8 @@ class Module(models.Model):
     Module_Lead = models.CharField(max_length=100, null=True, blank=True)
     Catalogue_Link = models.CharField(max_length=200)
     Description = models.CharField(max_length=1000, null=True, blank=True)
-    Last_Updated = models.DateTimeField
+    # Last_Updated = models.DateTimeField
+    assignedSDG = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.Module_ID + ': ' + self.Module_Name

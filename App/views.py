@@ -3,7 +3,6 @@ from .models import Module, Publication
 from django.views import View
 from .forms import ModuleForm
 from django.contrib import messages
-from .filters import ModuleFilter
 from django.db.models import Q
 import pyodbc, json, os
 from django.http import HttpResponse
@@ -16,7 +15,7 @@ import pandas as pd
 Module_CSV_Data = None
 Publication_CSV_Data = None
 global_context = {}
-global_display_limit = 100
+global_display_limit = 10
 UCL_AffiliationID = "60022148"
 
 
@@ -29,8 +28,7 @@ def App(request):
     all_publications = Publication.objects.all()[:global_display_limit]
 
     if request.method == "POST":
-        
-        updatePublicationsFromJSON(request)
+        # updatePublicationsFromJSON(request)
         # updateModuleData(request)
         return redirect('App')
 
@@ -50,7 +48,9 @@ def App(request):
         query = request.GET.get('q')
         form = getCheckBoxState(request, form)
         if query is not None and query != '' and len(query) != 0:
-            return returnQuery(request, form, query, all_modules, all_publications)
+            c = returnQuery(request, form, query, all_modules, all_publications)
+            return render(request, 'index.html', c)
+
         else:
             Module_CSV_Data = None
             Publication_CSV_Data = None
@@ -179,7 +179,10 @@ def returnQuery(request, form, query, all_modules, all_publications):
         Module_CSV_Data = context["mod"]
         Publication_CSV_Data = context["pub"]
     global_context = context
-    return render(request, 'index.html', context)
+    return context
+
+def returnSDGQuery():
+    pass
 
 def join(request):
     if request.method == "POST":
@@ -229,7 +232,7 @@ def processForSDG(doi_searched):
             publicationData = publicationData.append(rowDataFrame, verify_integrity=True, ignore_index=True)
     return publicationData
 
-def loadSDG_Data():
+def loadSDG_Data_PUBLICATION():
     files_directory = "ALL_SCAPERS/sdgAssignments.json"
     with open(files_directory) as json_file:
         data_ = json.load(json_file)
@@ -238,21 +241,44 @@ def loadSDG_Data():
             obj.assignedSDG = data_[i]
             obj.save()
 
+def loadSDG_Data_MODULES():
+    files_directory = "ALL_SCAPERS/training_results.json"
+    with open(files_directory) as json_file:
+        data_ = json.load(json_file)['Document Topics']
+        for module in data_:
+            weights = data_[module]
+            module_SDG_assignments = {}
+            module_SDG_assignments["Module_ID"] = module
+            for i in range(len(weights)):
+                weights[i] = weights[i].replace('(', '').replace(')', '').replace('%', '').replace(' ', '').split(',')
+                sdgNum = weights[i][0]
+                module_SDG_assignments[sdgNum] = float(weights[i][1])
+
+            obj = Module.objects.get(Module_ID=module)
+            obj.assignedSDG = module_SDG_assignments
+            obj.save()
+
 def sdg(request):
+    form = {"modBox": "unchecked", "pubBox": "unchecked"}
     context = {
         'pub': Publication.objects.all()[:global_display_limit],
-        'len': Publication.objects.count()
+        'mod': Module.objects.all()[:global_display_limit],
+        'lenPub': Publication.objects.count(),
+        'lenMod': Module.objects.count(),
+        'form': getCheckBoxState(request, form)
     }
 
     # Update the database with new sdg assignments
     if request.method == "POST":
-        loadSDG_Data()
+        # loadSDG_Data_PUBLICATION()
+        loadSDG_Data_MODULES()
 
     if request.method == 'GET':
         query = request.GET.get('b')
         if query is not None and query != '' and len(query) != 0:
-            context['pub'] = publicationSearch(request, query, None, None)['pub']
-            context['len'] = context['pub'].count()
+            context = returnQuery(request, form, query, context['mod'], context['pub'])
+            context['lenPub'] = context['pub'].count()
+            context['lenMod'] = context['mod'].count()
 
     return render(request, 'sdg.html', context)
 

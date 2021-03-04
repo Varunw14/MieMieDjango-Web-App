@@ -16,7 +16,7 @@
     <form action="{% url 'App' %}" method="GET" value="{{ request.GET.q }}">
         <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search posts"/>
         <input type="submit" name="submit" value="Search"/>
-         <form method="post" action="#">
+        <form method="post" action="#">
              Modules {{ form.modBox }} <input type="checkbox", value="clicked", name="modBox" {{ form.modBox }}> 
              Publications {{ form.pubBox }} <input type="checkbox", value="clicked", name="pubBox" {{ form.pubBox }}> 
         </form><br>
@@ -27,6 +27,9 @@
     </button>
     <button style="" class="btn btn-primary" type="submit" value='Click' name="exportPublications">
         <a style="color:white" href="{% url 'export_publications_csv' %}">Export Publications to CSV</a> 
+    </button>
+    <button style="" class="btn btn-primary" type="submit" value='Click' name="goToSDG">
+        <a style="color:white" href="{% url 'sdg' %}" target="_blank">View SDG Assignments</a> 
     </button>
     
     <br>
