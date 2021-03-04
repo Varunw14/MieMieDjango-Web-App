@@ -8,11 +8,17 @@ from django.db.models import Q
 import pyodbc, json, os
 from django.http import HttpResponse
 import csv
+import pickle
+import gensim
+import pandas as pd
+
 
 Module_CSV_Data = None
 Publication_CSV_Data = None
 global_context = {}
+global_display_limit = 100
 UCL_AffiliationID = "60022148"
+
 
 def App(request):
     global Module_CSV_Data
@@ -20,10 +26,11 @@ def App(request):
     global global_context
 
     all_modules = Module.objects.all
-    all_publications = Publication.objects.all()
+    all_publications = Publication.objects.all()[:global_display_limit]
 
     if request.method == "POST":
-        # updatePublicationsFromJSON(request)
+        
+        updatePublicationsFromJSON(request)
         # updateModuleData(request)
         return redirect('App')
 
@@ -83,6 +90,9 @@ def updateModuleData(request):
     for i in new_data:
         obj, created = Module.objects.get_or_create(Department_Name=i[0], Department_ID=i[1], Module_Name=i[2], Module_ID=i[3], Faculty=i[4], Credit_Value=i[5], Module_Lead=i[6], Catalogue_Link=i[7], Description=i[8])
 
+def clearEmptySDG_assignments():
+    Publication.objects.filter(assignedSDG__isnull=True).delete()
+
 def updatePublicationsFromJSON(request):
     files_directory = "ALL_SCAPERS/SCOPUS/GENERATED_FILES/"
     allFileNames = os.listdir(files_directory)
@@ -90,6 +100,7 @@ def updatePublicationsFromJSON(request):
         with open(files_directory + i) as json_file:
             data_ = json.load(json_file)
             if data_:
+    
                 obj, created = Publication.objects.get_or_create(title=data_['Title'])
                 obj.data = data_
                 obj.save()
@@ -195,6 +206,55 @@ def join(request):
 
     else:
         return render(request, 'join.html', {})
+
+def processForSDG(doi_searched):
+    publicationData = pd.DataFrame(columns=['DOI', 'Description'])
+    p = Publication.objects.all()
+    for i in p:
+        data = json.dumps(i.data)
+        data = json.loads(data)
+        doi = data['DOI']
+        if doi_searched == doi:
+            concatDataFields = i.title
+            if data['Abstract']:
+                concatDataFields += data['Abstract']
+            if data['AuthorKeywords']:
+                concatDataFields += " ".join(data['AuthorKeywords'])
+            if data['IndexKeywords']:
+                concatDataFields += " ".join(data['IndexKeywords'])
+            if data['SubjectAreas']:
+                subjectName = [x[0] for x in data['SubjectAreas']]
+                concatDataFields += " ".join(subjectName)
+            rowDataFrame = pd.DataFrame([[doi, concatDataFields]], columns=publicationData.columns)
+            publicationData = publicationData.append(rowDataFrame, verify_integrity=True, ignore_index=True)
+    return publicationData
+
+def loadSDG_Data():
+    files_directory = "ALL_SCAPERS/sdgAssignments.json"
+    with open(files_directory) as json_file:
+        data_ = json.load(json_file)
+        for i in data_:
+            obj = Publication.objects.get(title=data_[i]['Title'])
+            obj.assignedSDG = data_[i]
+            obj.save()
+
+def sdg(request):
+    context = {
+        'pub': Publication.objects.all()[:global_display_limit],
+        'len': Publication.objects.count()
+    }
+
+    # Update the database with new sdg assignments
+    if request.method == "POST":
+        loadSDG_Data()
+
+    if request.method == 'GET':
+        query = request.GET.get('b')
+        if query is not None and query != '' and len(query) != 0:
+            context['pub'] = publicationSearch(request, query, None, None)['pub']
+            context['len'] = context['pub'].count()
+
+    return render(request, 'sdg.html', context)
 
 def module(request, pk):
     try:

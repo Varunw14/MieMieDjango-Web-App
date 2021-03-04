@@ -38,7 +38,6 @@ class JSONField(models.TextField):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return value
 
-# Create your models here.
 class Module(models.Model):
     Department_Name = models.CharField(max_length=200)
     Department_ID = models.CharField(max_length=100)
@@ -60,7 +59,8 @@ class Module(models.Model):
 class Publication(models.Model):
     title = models.CharField(max_length=200, blank=True)
     data = models.JSONField(null=True, blank=True)
-
+    assignedSDG = models.JSONField(null=True, blank=True)
+    
     def __str__(self):
         return self.title
 

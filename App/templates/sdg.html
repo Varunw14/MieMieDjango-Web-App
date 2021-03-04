@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% comment %} SEARCH + CHECKBOXES {% endcomment %}
+    <br>
+    <form action="{% url 'sdg' %}" method="GET" value="{{ request.GET.b }}">
+        <input type="text" name="b" value="{{ request.GET.b }}" placeholder="Search DOI"/>
+        <input type="submit" name="submit" value="Search"/>
+    </form>
+
+
+    <form action="{% url 'sdg' %}" method="POST">
+        {% csrf_token %}
+        <button style="margin-left: 30px" class="btn btn-primary" type="submit" value='Click' name="updateModuleData">Sync Data</button>
+    </form>
+    <br><br><br>
+
+
+    <table class="table table-striped">
+        <h3>Publications found: {{ len }}</h3><br>
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">SDG 1</th>
+                <th scope="col">SDG 2</th>
+                <th scope="col">SDG 3</th>
+                <th scope="col">SDG 4</th>
+                <th scope="col">SDG 5</th>
+                <th scope="col">SDG 6</th>
+                <th scope="col">SDG 7</th>
+                <th scope="col">SDG 8</th>
+                <th scope="col">SDG 9</th>
+                <th scope="col">SDG 10</th>
+                <th scope="col">SDG 11</th>
+                <th scope="col">SDG 12</th>
+                <th scope="col">SDG 13</th>
+                <th scope="col">SDG 14</th>
+                <th scope="col">SDG 15</th>
+                <th scope="col">SDG 16</th>
+                <th scope="col">SDG 17</th>
+                <th scope="col">Misc</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pub %}
+                    <tr>
+                        <td><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></td>
+                        <td>{{ item.assignedSDG.1|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.2|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.3|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.4|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.5|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.6|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.7|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.8|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.9|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.10|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.11|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.12|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.13|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.14|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.15|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.16|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.17|floatformat:"2" }}</td>
+                        <td>{{ item.assignedSDG.18|floatformat:"2" }}</td>
+                    </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
