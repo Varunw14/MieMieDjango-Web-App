@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <br>
-    
+
     {% comment %} SEARCH + CHECKBOXES {% endcomment %}
     <form action="{% url 'sdg' %}" method="POST">
         {% csrf_token %}
@@ -13,8 +12,9 @@
     
     <br>
     
+    {% comment %} SEARCH + CHECKBOXES {% endcomment %}
     <form action="{% url 'sdg' %}" method="GET" value="{{ request.GET.b }}">
-        <input type="text" name="b" value="{{ request.GET.b }}" placeholder="Search DOI"/>
+        <input type="text" name="b" value="{{ request.GET.b }}" placeholder="Search query"/>
         <input type="submit" name="submit" value="Search"/>
         <form method="post" action="#">
             Modules {{ form.modBox }} <input type="checkbox", value="clicked", name="modBox" {{ form.modBox }}> 
@@ -22,11 +22,17 @@
         </form><br>
     </form>
 
-    <br>
+    <button style="" class="btn btn-primary" type="submit" value='Click' name="goToLDA">
+        <a style="color:white" href="{% url 'lda' %}" target="_blank">View LDA Visualization</a> 
+    </button>
 
+    <br>  
+    <br> 
+
+    {% comment %} PUBLICATION DATA DISPLAY TABLE {% endcomment %}
     {% if form.pubBox == 'checked' %}
         <table class="table table-striped">
-            <br><h3>Publications found: {{ lenPub }}</h3><br>
+            <br><h3>Publications found: {{ lenPub }}</h3>
             <thead>
                 <tr>
                     <th scope="col">Title</th>
@@ -78,6 +84,7 @@
         </table>
     {% endif %}
 
+    {% comment %} MODULE DATA DISPLAY TABLE {% endcomment %}
     {% if form.modBox == 'checked' %}
         <table class="table table-striped">
             <br><h3>Modules found: {{ lenMod }}</h3><br>

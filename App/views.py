@@ -181,8 +181,8 @@ def returnQuery(request, form, query, all_modules, all_publications):
     global_context = context
     return context
 
-def returnSDGQuery():
-    pass
+def lda(request):
+    return render(request, "lda.html", {})
 
 def join(request):
     if request.method == "POST":
@@ -271,7 +271,8 @@ def sdg(request):
     # Update the database with new sdg assignments
     if request.method == "POST":
         # loadSDG_Data_PUBLICATION()
-        loadSDG_Data_MODULES()
+        # loadSDG_Data_MODULES()
+        pass
 
     if request.method == 'GET':
         query = request.GET.get('b')

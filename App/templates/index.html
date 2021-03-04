@@ -6,7 +6,7 @@
     <form action="{% url 'App' %}" method="POST">
         {% csrf_token %}
         <h1>UCL5 MieMie NLP & Data Mining Engine 
-            <button style="margin-left: 30px" class="btn btn-primary" type="submit" value='Click' name="updateModuleData">Reload Data</button>
+            <button style="margin-left: 30px" class="btn btn-primary" type="submit" value='Click' name="updateModuleData">Sync Data</button>
         </h1>     
     </form>
     
@@ -14,7 +14,7 @@
     
     {% comment %} SEARCH + CHECKBOXES {% endcomment %}
     <form action="{% url 'App' %}" method="GET" value="{{ request.GET.q }}">
-        <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search posts"/>
+        <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search query"/>
         <input type="submit" name="submit" value="Search"/>
         <form method="post" action="#">
              Modules {{ form.modBox }} <input type="checkbox", value="clicked", name="modBox" {{ form.modBox }}> 
@@ -39,16 +39,10 @@
     {% comment %} PUBLICATION DATA DISPLAY TABLE {% endcomment %}
     {% if form.pubBox == 'checked' %}
         <h3>Publications found: {{ len_pub }}</h3><br>
-        {% comment %} {% for item in pub %}
-            <p><b>Title:</b> {{ item.title }}</p>
-            <p><b>DOI:</b> {{ item.data.DOI }} <a href="{{ item.get_absolute_url }}">Details</a></p>
-            <hr>
-        {% endfor %} {% endcomment %}
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">Title</th>
-                    {% comment %} <th scope="col">DOI</th> {% endcomment %}
                     <th scope="col">Link</th>
                 </tr>
             </thead>
@@ -56,7 +50,6 @@
                 {% for item in pub %}
                     <tr>
                         <td>{{ item.title  }}</td>
-                        {% comment %} <td>{{ item.data.DOI }}</td> {% endcomment %}
                         <td><a href="{{ item.get_absolute_url }}">More</a></td>
                     </tr>
                 {% endfor %}
@@ -64,13 +57,11 @@
         </table>
     {% endif %}
 
+    <br>
+
     {% comment %} MODULE DATA DISPLAY TABLE {% endcomment %}
     {% if form.modBox == 'checked' %}
         <h3>Modules found: {{ len_mod }}</h3><br>
-        {% comment %} {% for item in mod %}
-            <p><b>Module ID:</b> {{ item.Module_ID }} <b>Module Name:</b> {{ item.Module_Name }} <a href="{{ item.get_absolute_url }}">Details</a></p>
-            <hr>
-        {% endfor %} {% endcomment %}
         <table class="table table-striped">
             <thead>
                 <tr>
