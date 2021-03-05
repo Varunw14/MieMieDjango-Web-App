@@ -28,8 +28,8 @@ def App(request):
     all_publications = Publication.objects.all()[:global_display_limit]
 
     if request.method == "POST":
-        # updatePublicationsFromJSON(request)
-        # updateModuleData(request)
+        updatePublicationsFromJSON(request)
+        updateModuleData(request)
         return redirect('App')
 
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
