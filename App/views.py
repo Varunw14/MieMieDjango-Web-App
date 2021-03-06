@@ -232,16 +232,43 @@ def processForSDG(doi_searched):
             publicationData = publicationData.append(rowDataFrame, verify_integrity=True, ignore_index=True)
     return publicationData
 
+def getModule_validation():
+    pass
+
+def getModule_validation():
+    pass
+
 def loadSDG_Data_PUBLICATION():
+    threshold = 20
     files_directory = "ALL_SCAPERS/sdgAssignments.json"
+    publication_SDG_assignments = {}
     with open(files_directory) as json_file:
         data_ = json.load(json_file)
+
         for i in data_:
+            publication_SDG_assignments = data_[i]
+            calc_highest = []
+            for j in range(18):
+                try:
+                    weight = float(data_[i][str(j)]) * 100
+                    weight = round(weight, 2)
+                    calc_highest.append((str(j), weight))
+                except:
+                    pass
+
+            p = sorted(calc_highest, key=lambda x: x[1])
+            validWeights = []
+            for sdg, weight in p:
+                if weight >= threshold:
+                    validWeights.append(sdg)
+
+            publication_SDG_assignments['Result'] = ",".join(validWeights)
             obj = Publication.objects.get(title=data_[i]['Title'])
-            obj.assignedSDG = data_[i]
+            obj.assignedSDG = publication_SDG_assignments
             obj.save()
 
 def loadSDG_Data_MODULES():
+    threshold = 20
     files_directory = "ALL_SCAPERS/training_results.json"
     with open(files_directory) as json_file:
         data_ = json.load(json_file)['Document Topics']
@@ -249,10 +276,20 @@ def loadSDG_Data_MODULES():
             weights = data_[module]
             module_SDG_assignments = {}
             module_SDG_assignments["Module_ID"] = module
+            w = []
             for i in range(len(weights)):
                 weights[i] = weights[i].replace('(', '').replace(')', '').replace('%', '').replace(' ', '').split(',')
                 sdgNum = weights[i][0]
                 module_SDG_assignments[sdgNum] = float(weights[i][1])
+                w.append((sdgNum, float(weights[i][1])))
+            
+            validWeights = []
+            p = sorted(w, key=lambda x: x[1])
+            for sdg, weight in p:
+                if weight >= threshold:
+                    validWeights.append(sdg)
+            module_SDG_assignments['Result'] = ",".join(validWeights)
+            
 
             obj = Module.objects.get(Module_ID=module)
             obj.assignedSDG = module_SDG_assignments
@@ -270,7 +307,7 @@ def sdg(request):
 
     # Update the database with new sdg assignments
     if request.method == "POST":
-        # loadSDG_Data_PUBLICATION()
+        loadSDG_Data_PUBLICATION()
         # loadSDG_Data_MODULES()
         pass
 

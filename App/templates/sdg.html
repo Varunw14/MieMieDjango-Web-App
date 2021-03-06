@@ -35,6 +35,7 @@
             <br><h3>Publications found: {{ lenPub }}</h3>
             <thead>
                 <tr>
+                    <th scope="col">Status</th>
                     <th scope="col">Title</th>
                     <th scope="col">SDG 1</th>
                     <th scope="col">SDG 2</th>
@@ -54,12 +55,16 @@
                     <th scope="col">SDG 16</th>
                     <th scope="col">SDG 17</th>
                     <th scope="col">Misc</th>
+                    <th scope="col">Predicted</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in pub %}
                     <tr>
-                        <td><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></td>
+                        {% comment %} <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(255, 0, 0, 1);"></td> {% endcomment %}
+                        {% comment %} <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(255, 255, 0, 1);"></td> {% endcomment %}
+                        <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(0, 255, 0, 1);"></td>
+                        <td><a href="{{ item.get_absolute_url }}">{{ item.title|truncatechars:50 }}</a></td>
                         <td>{{ item.assignedSDG.1|floatformat:"2" }}</td>
                         <td>{{ item.assignedSDG.2|floatformat:"2" }}</td>
                         <td>{{ item.assignedSDG.3|floatformat:"2" }}</td>
@@ -78,6 +83,11 @@
                         <td>{{ item.assignedSDG.16|floatformat:"2" }}</td>
                         <td>{{ item.assignedSDG.17|floatformat:"2" }}</td>
                         <td>{{ item.assignedSDG.18|floatformat:"2" }}</td>
+                        {% if item.assignedSDG.Result != ""%}
+                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                        {% else %}
+                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">None</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -90,7 +100,8 @@
             <br><h3>Modules found: {{ lenMod }}</h3><br>
             <thead>
                 <tr>
-                    <th scope="col">Module ID</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Module Name</th>
                     <th scope="col">SDG 1</th>
                     <th scope="col">SDG 2</th>
                     <th scope="col">SDG 3</th>
@@ -109,12 +120,16 @@
                     <th scope="col">SDG 16</th>
                     <th scope="col">SDG 17</th>
                     <th scope="col">Misc</th>
+                    <th scope="col">Predicted</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in mod %}
-                    <tr>
-                        <td><a href="{{ item.get_absolute_url }}">{{ item.Module_ID }}</a></td>
+                    <tr style="border-bottom: 1pt solid black">
+                        {% comment %} <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(255, 0, 0, 1);"></td> {% endcomment %}
+                        {% comment %} <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(255, 255, 0, 1);"></td> {% endcomment %}
+                        <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba(0, 255, 0, 1);"></td>
+                        <td><a href="{{ item.get_absolute_url }}">{{ item.Module_Name|truncatechars:50 }}</a></td>
                         <td>{{ item.assignedSDG.1 }}</td>
                         <td>{{ item.assignedSDG.2 }}</td>
                         <td>{{ item.assignedSDG.3 }}</td>
@@ -133,10 +148,27 @@
                         <td>{{ item.assignedSDG.16 }}</td>
                         <td>{{ item.assignedSDG.17 }}</td>
                         <td>{{ item.assignedSDG.18 }}</td>
+                        {% if item.assignedSDG.Result != ""%}
+                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                        {% else %}
+                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">None</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        {% comment %} <table style="float: left" class="table table-striped">
+            <thead>
+                <tr><th scope="col">Predicted</th></tr>
+            </thead>
+            <tbody>
+                {% for item in mod %}
+                    <tr><td>{{ item.assignedSDG.Result }}</td></tr>
+                {% endfor %}
+            <tbody>
+        </table> {% endcomment %}
+
     {% endif %}
 
 {% endblock %}
