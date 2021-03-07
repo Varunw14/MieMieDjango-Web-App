@@ -10,6 +10,7 @@ import csv
 import pickle
 import gensim
 import pandas as pd
+from colorsys import hsv_to_rgb
 
 
 Module_CSV_Data = None
@@ -232,11 +233,26 @@ def processForSDG(doi_searched):
             publicationData = publicationData.append(rowDataFrame, verify_integrity=True, ignore_index=True)
     return publicationData
 
-def getModule_validation():
-    pass
+def pseudocolor(val, minval, maxval):
+    h = (float(val-minval) / (maxval-minval)) * 120
+    r, g, b = hsv_to_rgb(h/360, 1., 1.)
+    oldRange = 1
+    newRange = 255
+    r = int(((r) * newRange / oldRange))
+    g = int(((g) * newRange / oldRange))
+    b = int(((b) * newRange / oldRange))
+    return r, g, b
 
-def getModule_validation():
-    pass
+def getModule_validation(module):
+    files_directory = "ALL_SCAPERS/moduleValidationSDG.json"
+    with open(files_directory) as json_file:
+        data_ = json.load(json_file)
+        similarityRGB = data_[module]['Similarity']
+        data_[module]['ColorRed'], data_[module]['ColorGreen'], data_[module]['ColorBlue'] = pseudocolor(similarityRGB*100, 0, 100)
+        return data_[module]
+
+def getPublication_validation(publication):
+    return None
 
 def loadSDG_Data_PUBLICATION():
     threshold = 20
@@ -262,6 +278,7 @@ def loadSDG_Data_PUBLICATION():
                 if weight >= threshold:
                     validWeights.append(sdg)
 
+            publication_SDG_assignments["Validation"] = getPublication_validation(i)
             publication_SDG_assignments['Result'] = ",".join(validWeights)
             obj = Publication.objects.get(title=data_[i]['Title'])
             obj.assignedSDG = publication_SDG_assignments
@@ -276,6 +293,7 @@ def loadSDG_Data_MODULES():
             weights = data_[module]
             module_SDG_assignments = {}
             module_SDG_assignments["Module_ID"] = module
+            module_SDG_assignments["Validation"] = getModule_validation(module)
             w = []
             for i in range(len(weights)):
                 weights[i] = weights[i].replace('(', '').replace(')', '').replace('%', '').replace(' ', '').split(',')
@@ -299,7 +317,7 @@ def sdg(request):
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
     context = {
         'pub': Publication.objects.all()[:global_display_limit],
-        'mod': Module.objects.all()[:global_display_limit],
+        'mod': Module.objects.all()[:100],
         'lenPub': Publication.objects.count(),
         'lenMod': Module.objects.count(),
         'form': getCheckBoxState(request, form)
@@ -307,8 +325,8 @@ def sdg(request):
 
     # Update the database with new sdg assignments
     if request.method == "POST":
-        loadSDG_Data_PUBLICATION()
-        # loadSDG_Data_MODULES()
+        # loadSDG_Data_PUBLICATION()
+        loadSDG_Data_MODULES()
         pass
 
     if request.method == 'GET':
