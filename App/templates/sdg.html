@@ -82,7 +82,11 @@
                         <td>{{ item.assignedSDG.17|floatformat:"2" }}</td>
                         <td>{{ item.assignedSDG.18|floatformat:"2" }}</td>
                         {% if item.assignedSDG.Result != ""%}
-                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                            {% if item.assignedSDG.Result == "18"%}
+                                <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">Misc</td>
+                            {% else %}
+                                <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                            {% endif %}
                         {% else %}
                             <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">None</td>
                         {% endif %}
@@ -149,7 +153,11 @@
                         <td>{{ item.assignedSDG.17 }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.16 }}</td>
                         <td>{{ item.assignedSDG.18 }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.17 }}</td>
                         {% if item.assignedSDG.Result != ""%}
-                            <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                            {% if item.assignedSDG.Result == "18"%}
+                                <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">Misc</td>
+                            {% else %}
+                                <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">{{ item.assignedSDG.Result }}</td>
+                            {% endif %}
                         {% else %}
                             <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">None</td>
                         {% endif %}

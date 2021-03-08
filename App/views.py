@@ -4,12 +4,11 @@ from django.views import View
 from .forms import ModuleForm
 from django.contrib import messages
 from django.db.models import Q
-import pyodbc, json, os
 from django.http import HttpResponse
-import csv
-import pickle
-import gensim
-import pandas as pd
+
+import pyodbc, json, os
+import pymongo
+from bson import json_util
 from colorsys import hsv_to_rgb
 
 
@@ -29,8 +28,8 @@ def App(request):
     all_publications = Publication.objects.all()[:global_display_limit]
 
     if request.method == "POST":
-        updatePublicationsFromJSON(request)
-        updateModuleData(request)
+        # updatePublicationsFromMongoDB(request)
+        # updateModuleData(request)
         return redirect('App')
 
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
@@ -94,17 +93,21 @@ def updateModuleData(request):
 def clearEmptySDG_assignments():
     Publication.objects.filter(assignedSDG__isnull=True).delete()
 
-def updatePublicationsFromJSON(request):
-    files_directory = "ALL_SCAPERS/SCOPUS/GENERATED_FILES/"
-    allFileNames = os.listdir(files_directory)
-    for i in allFileNames:
-        with open(files_directory + i) as json_file:
-            data_ = json.load(json_file)
-            if data_:
-    
-                obj, created = Publication.objects.get_or_create(title=data_['Title'])
-                obj.data = data_
-                obj.save()
+def updatePublicationsFromMongoDB(request):
+    client = pymongo.MongoClient("mongodb+srv://admin:admin@cluster0.hw8fo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    db = client.Scopus
+    col = db.Data
+    data = col.find()
+    c = 0
+    for i in data:
+        i = json.loads(json_util.dumps(i))
+        obj, created = Publication.objects.get_or_create(title=i['Title'])
+        obj.title = i['Title']
+        obj.data = i
+        obj.save()
+        c += 1
+        print("Loaded", c, "/", "25830")
+    client.close()
 
 def getCheckBoxState(request, form):
     if request.GET.get('modBox') == "clicked":
@@ -317,7 +320,7 @@ def sdg(request):
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
     context = {
         'pub': Publication.objects.all()[:global_display_limit],
-        'mod': Module.objects.all()[:100],
+        'mod': Module.objects.all()[:global_display_limit],
         'lenPub': Publication.objects.count(),
         'lenMod': Module.objects.count(),
         'form': getCheckBoxState(request, form)
