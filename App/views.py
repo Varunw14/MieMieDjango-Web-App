@@ -255,7 +255,12 @@ def getModule_validation(module):
         return data_[module]
 
 def getPublication_validation(publication):
-    return None
+    files_directory = "ALL_SCAPERS/scopusValidationSDG.json"
+    with open(files_directory) as json_file:
+        data_ = json.load(json_file)
+        similarityRGB = data_[publication]['Similarity']
+        data_[publication]['ColorRed'], data_[publication]['ColorGreen'], data_[publication]['ColorBlue'] = pseudocolor(similarityRGB*100, 0, 100)
+        return data_[publication]
 
 def loadSDG_Data_PUBLICATION():
     threshold = 20
@@ -263,8 +268,10 @@ def loadSDG_Data_PUBLICATION():
     publication_SDG_assignments = {}
     with open(files_directory) as json_file:
         data_ = json.load(json_file)
-
+        count = 1
         for i in data_:
+            print("Writing", count, "/", "25800")
+            count += 1
             publication_SDG_assignments = data_[i]
             calc_highest = []
             for j in range(18):
@@ -328,8 +335,8 @@ def sdg(request):
 
     # Update the database with new sdg assignments
     if request.method == "POST":
-        # loadSDG_Data_PUBLICATION()
-        loadSDG_Data_MODULES()
+        loadSDG_Data_PUBLICATION()
+        # loadSDG_Data_MODULES()
         pass
 
     if request.method == 'GET':

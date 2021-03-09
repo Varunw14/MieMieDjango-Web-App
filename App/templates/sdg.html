@@ -36,7 +36,8 @@
             <thead>
                 <tr>
                     <th scope="col">Status</th>
-                    <th scope="col">Title</th>
+                    <th scope="col">DOI</th>
+                    <th></th>
                     <th scope="col">SDG 1</th>
                     <th scope="col">SDG 2</th>
                     <th scope="col">SDG 3</th>
@@ -56,31 +57,33 @@
                     <th scope="col">SDG 17</th>
                     <th scope="col">Misc</th>
                     <th scope="col">Predicted</th>
+                    <th scope="col">Validation Similarity</th>
                 </tr>
             </thead>
             <tbody style="text-align: center; vertical-align: middle;">
                 {% for item in pub %}
                     <tr>
                         <td style="border-right: 1pt solid black; border-left: 1pt solid black fill; background-color:rgba({{item.assignedSDG.Validation.ColorRed}}, {{item.assignedSDG.Validation.ColorGreen}}, {{item.assignedSDG.Validation.ColorBlue}}, 1);"></td>
-                        <td><a href="{{ item.get_absolute_url }}">{{ item.title|truncatechars:50 }}</a></td>
-                        <td>{{ item.assignedSDG.1|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.2|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.3|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.4|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.5|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.6|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.7|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.8|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.9|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.10|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.11|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.12|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.13|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.14|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.15|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.16|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.17|floatformat:"2" }}</td>
-                        <td>{{ item.assignedSDG.18|floatformat:"2" }}</td>
+                        <td><a href="{{ item.get_absolute_url }}">{{ item.title|truncatechars:40 }}</a></td>
+                        <td>Model<br>String</td>
+                        <td>{{ item.assignedSDG.1|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.0 }}</td>
+                        <td>{{ item.assignedSDG.2|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.1 }}</td>
+                        <td>{{ item.assignedSDG.3|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.2 }}</td>
+                        <td>{{ item.assignedSDG.4|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.3 }}</td>
+                        <td>{{ item.assignedSDG.5|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.4 }}</td>
+                        <td>{{ item.assignedSDG.6|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.5 }}</td>
+                        <td>{{ item.assignedSDG.7|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.6 }}</td>
+                        <td>{{ item.assignedSDG.8|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.7 }}</td>
+                        <td>{{ item.assignedSDG.9|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.8 }}</td>
+                        <td>{{ item.assignedSDG.10|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.9 }}</td>
+                        <td>{{ item.assignedSDG.11|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.10 }}</td>
+                        <td>{{ item.assignedSDG.12|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.11 }}</td>
+                        <td>{{ item.assignedSDG.13|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.12 }}</td>
+                        <td>{{ item.assignedSDG.14|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.13 }}</td>
+                        <td>{{ item.assignedSDG.15|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.14 }}</td>
+                        <td>{{ item.assignedSDG.16|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.15 }}</td>
+                        <td>{{ item.assignedSDG.17|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.16 }}</td>
+                        <td>{{ item.assignedSDG.18|floatformat:"2" }} <br> {{ item.assignedSDG.Validation.SDG_Keyword_Counts.17 }}</td>
                         {% if item.assignedSDG.Result != ""%}
                             {% if item.assignedSDG.Result == "18"%}
                                 <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">Misc</td>
@@ -90,6 +93,7 @@
                         {% else %}
                             <td style="border: solid 0 #060; border-left-width:2px; border-right-width:2px; text-align: center">None</td>
                         {% endif %}
+                        <td>{{ item.assignedSDG.Validation.Similarity|floatformat:"2" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
