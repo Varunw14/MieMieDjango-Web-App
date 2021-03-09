@@ -28,8 +28,8 @@ def App(request):
     all_publications = Publication.objects.all()[:global_display_limit]
 
     if request.method == "POST":
-        # updatePublicationsFromMongoDB(request)
-        # updateModuleData(request)
+        updatePublicationsFromMongoDB(request)
+        updateModuleData(request)
         return redirect('App')
 
     form = {"modBox": "unchecked", "pubBox": "unchecked"}
@@ -336,7 +336,7 @@ def sdg(request):
     # Update the database with new sdg assignments
     if request.method == "POST":
         loadSDG_Data_PUBLICATION()
-        # loadSDG_Data_MODULES()
+        loadSDG_Data_MODULES()
         pass
 
     if request.method == 'GET':
