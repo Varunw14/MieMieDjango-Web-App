@@ -81,7 +81,7 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django_db_miemie_ucl',
-        'HOST': 'miemieserver.postgres.database.azure.com',
+        'HOST': 'miemiedjangoapp.postgres.database.azure.com',
         'PORT': 5432,
         'USER': 'miemie_admin@miemieserver',
         'PASSWORD': 'e_Paswrd?!'
