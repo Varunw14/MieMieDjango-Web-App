@@ -31,4 +31,4 @@ jobs:
       with:
         app-name: 'django-test-app-miemie'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8ebac838c08041d3b9283150afd6d352 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_90a228f5185b420c9354955eb80088b3 }}
