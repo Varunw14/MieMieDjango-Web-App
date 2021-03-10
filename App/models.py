@@ -39,15 +39,15 @@ class JSONField(models.TextField):
         return value
 
 class Module(models.Model):
-    Department_Name = models.CharField(max_length=200)
-    Department_ID = models.CharField(max_length=100)
-    Module_Name = models.CharField(max_length=200)
-    Module_ID = models.CharField(max_length=100)
-    Faculty = models.CharField(max_length=200)
+    Department_Name = models.CharField(max_length=400)
+    Department_ID = models.CharField(max_length=200)
+    Module_Name = models.CharField(max_length=400)
+    Module_ID = models.CharField(max_length=200)
+    Faculty = models.CharField(max_length=400)
     Credit_Value = models.IntegerField(default=0)
-    Module_Lead = models.CharField(max_length=100, null=True, blank=True)
-    Catalogue_Link = models.CharField(max_length=200)
-    Description = models.CharField(max_length=1000, null=True, blank=True)
+    Module_Lead = models.CharField(max_length=200, null=True, blank=True)
+    Catalogue_Link = models.CharField(max_length=400)
+    Description = models.CharField(max_length=1500, null=True, blank=True)
     # Last_Updated = models.DateTimeField
     assignedSDG = models.JSONField(null=True, blank=True)
 
@@ -58,7 +58,7 @@ class Module(models.Model):
         return f"/module/{self.pk}"
     
 class Publication(models.Model):
-    title = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=400, blank=True)
     data = models.JSONField(null=True, blank=True)
     assignedSDG = models.JSONField(null=True, blank=True)
     
