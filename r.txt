@@ -1,16 +1,16 @@
 {
   "connectionStrings": {
-    "ado.net": "Server=miemieserver.postgres.database.azure.com;Database=django_db_miemie_ucl;Port=5432;User Id=miemie_admin@miemieserver;Password=e_Paswrd?!;",
-    "jdbc": "jdbc:postgresql://miemieserver.postgres.database.azure.com:5432/django_db_miemie_ucl?user=miemie_admin@miemieserver&password=e_Paswrd?!",
-    "jdbc Spring": "spring.datasource.url=jdbc:postgresql://miemieserver.postgres.database.azure.com:5432/django_db_miemie_ucl  spring.datasource.username=miemie_admin@miemieserver  spring.datasource.password=e_Paswrd?!",
-    "node.js": "var client = new pg.Client('postgres://miemie_admin@miemieserver:e_Paswrd?!@miemieserver.postgres.database.azure.com:5432/django_db_miemie_ucl');",
-    "php": "host=miemieserver.postgres.database.azure.com port=5432 dbname=django_db_miemie_ucl user=miemie_admin@miemieserver password=e_Paswrd?!",
-    "psql_cmd": "psql --host=miemieserver.postgres.database.azure.com --port=5432 --username=miemie_admin@miemieserver --dbname=django_db_miemie_ucl",
-    "python": "cnx = psycopg2.connect(database='django_db_miemie_ucl', user='miemie_admin@miemieserver', host='miemieserver.postgres.database.azure.com', password='e_Paswrd?!', port='5432')",
-    "ruby": "cnx = PG::Connection.new(:host => 'miemieserver.postgres.database.azure.com', :user => 'miemie_admin@miemieserver', :dbname => 'django_db_miemie_ucl', :port => '5432', :password => 'e_Paswrd?!')",
-    "webapp": "Database=django_db_miemie_ucl; Data Source=miemieserver.postgres.database.azure.com; User Id=miemie_admin@miemieserver; Password=e_Paswrd?!"
+    "ado.net": "Server=miemiedjangoapp.postgres.database.azure.com;Database=django_db_miemie_ucl;Port=5432;User Id=miemie_admin@MiemieDjangoApp;Password=e_Paswrd?!;",
+    "jdbc": "jdbc:postgresql://miemiedjangoapp.postgres.database.azure.com:5432/django_db_miemie_ucl?user=miemie_admin@MiemieDjangoApp&password=e_Paswrd?!",
+    "jdbc Spring": "spring.datasource.url=jdbc:postgresql://miemiedjangoapp.postgres.database.azure.com:5432/django_db_miemie_ucl  spring.datasource.username=miemie_admin@MiemieDjangoApp  spring.datasource.password=e_Paswrd?!",
+    "node.js": "var client = new pg.Client('postgres://miemie_admin@MiemieDjangoApp:e_Paswrd?!@miemiedjangoapp.postgres.database.azure.com:5432/django_db_miemie_ucl');",
+    "php": "host=miemiedjangoapp.postgres.database.azure.com port=5432 dbname=django_db_miemie_ucl user=miemie_admin@MiemieDjangoApp password=e_Paswrd?!",
+    "psql_cmd": "psql --host=miemiedjangoapp.postgres.database.azure.com --port=5432 --username=miemie_admin@MiemieDjangoApp --dbname=django_db_miemie_ucl",
+    "python": "cnx = psycopg2.connect(database='django_db_miemie_ucl', user='miemie_admin@MiemieDjangoApp', host='miemiedjangoapp.postgres.database.azure.com', password='e_Paswrd?!', port='5432')",
+    "ruby": "cnx = PG::Connection.new(:host => 'miemiedjangoapp.postgres.database.azure.com', :user => 'miemie_admin@MiemieDjangoApp', :dbname => 'django_db_miemie_ucl', :port => '5432', :password => 'e_Paswrd?!')",
+    "webapp": "Database=django_db_miemie_ucl; Data Source=miemiedjangoapp.postgres.database.azure.com; User Id=miemie_admin@MiemieDjangoApp; Password=e_Paswrd?!"
   },
-  "host": "miemieserver.postgres.database.azure.com",
+  "host": "miemiedjangoapp.postgres.database.azure.com",
   "password": "e_Paswrd?!",
-  "username": "miemie_admin@miemieserver"
+  "username": "miemie_admin@MiemieDjangoApp"
 }
